@@ -1,6 +1,8 @@
 name: Paranoia Check
 
 on:
+  schedule:
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -26,6 +28,7 @@ jobs:
 
       - name: Run script
         env:
+          ROLL_NO: ${{ secrets.ROLL_NO }}
           PASSWORD: ${{ secrets.PASSWORD }}
           WEBHOOK: ${{ secrets.WEBHOOK }}
         run: pnpm go

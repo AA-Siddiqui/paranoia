@@ -55,7 +55,7 @@ async function hashObject(object) {
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
-  
+
   return hashHex;
 }
 
@@ -86,7 +86,7 @@ const main = async () => {
     const passwordSelector = '#password';
 
     await page.waitForSelector(usernameSelector);
-    await page.type(usernameSelector, 'SU92-BSSEM-F22-059');
+    await page.type(usernameSelector, process.env.ROLL_NO);
 
     await page.waitForSelector(passwordSelector);
     await page.type(passwordSelector, process.env.PASSWORD);
@@ -96,12 +96,17 @@ const main = async () => {
       page.click('button[type="submit"]')
     ]);
 
-    const links = await page.evaluate((sessionKeep) => {
+    const links = await page.evaluate(async (sessionKeep) => {
       window.scrollTo(0, document.body.scrollHeight);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       return Array.from(
         document.querySelectorAll("#hierarchical-show a")
       ).filter(
-        (a) => a.href.startsWith("https://erp.superior.edu.pk/student/results/id/") && a.querySelector("span.uk-text-small").innerText === sessionKeep
+        (a) => {
+          const startsWith = a.href.startsWith("https://erp.superior.edu.pk/student/results/id/");
+          const session = a.querySelector("span.uk-text-small").innerText === sessionKeep;
+          return startsWith && session;
+        }
       ).map(
         (a) => ({
           link: a.href,
@@ -154,7 +159,7 @@ const main = async () => {
             return results;
           } catch (e) { console.log(e); return null }
         });
-        return {name, submitted, results, total: results.reduce((acc, curr) => acc + curr.weight, 0), obtained: results.reduce((acc, curr) => acc + (curr.obtained / curr.total * curr.weight), 0) ?? 0};
+        return { name, submitted, results, total: results.reduce((acc, curr) => acc + curr.weight, 0), obtained: results.reduce((acc, curr) => acc + (curr.obtained / curr.total * curr.weight), 0) ?? 0 };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error(`Failed on ${url}:`, errorMessage);
@@ -171,14 +176,14 @@ const main = async () => {
     if (hash === hashOfEmpty) {
       return main();
     }
-    
+
     if (hash === prevHash) {
       console.log("No changes detected.");
       return;
     }
     prevHash = hash;
-    const filteredData = data.filter(entry => entry.obtained < 85);
-    await sendResults(filteredData);
+    // const filteredData = data.filter(entry => entry.obtained < 85);
+    await sendResults(data);
     console.log(JSON.stringify(data, null, 2));
 
   } catch (error) {
