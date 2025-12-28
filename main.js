@@ -76,7 +76,6 @@ const main = async () => {
   });
 
   const page = await browser.newPage();
-  page.setViewport({ width: 1280, height: 720 });
   page.setDefaultNavigationTimeout(600000);
 
   try {
@@ -118,7 +117,6 @@ const main = async () => {
       const name = urlObj.name;
       const submitted = urlObj.submitted;
       const page = await browser.newPage();
-      page.setViewport({ width: 1280, height: 720 });
       page.setDefaultNavigationTimeout(600000);
       try {
         await page.goto(url, { waitUntil: 'networkidle2' });
