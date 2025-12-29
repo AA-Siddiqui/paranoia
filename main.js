@@ -2,6 +2,13 @@ const puppeteer = require('puppeteer');
 const sessionKeep = "FALL 2025";
 let prevHash = null;
 
+const escapeToZero = (num) => {
+  if (isNaN(num) || num === null || num === undefined) {
+    return 0;
+  }
+  return num;
+}
+
 async function sendResults(data) {
   const webhookUrl = process.env.WEBHOOK;
   const embeds = data.map(entry => {
@@ -13,7 +20,7 @@ async function sendResults(data) {
       return [
         `**${r.name}**`,
         `Weight: ${r.weight}`,
-        `Score: ${r.obtained}/${r.total}`,
+        `Score: ${escapeToZero(r.obtained)}/${r.total}`,
         detailed ? `Details:\n${detailed}` : ""
       ].filter(Boolean).join("\n");
     }).join("\n\n");
