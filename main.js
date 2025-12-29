@@ -36,7 +36,7 @@ async function sendResults(data) {
         },
         {
           name: "Total",
-          value: `${entry.obtained ?? "N/A"}/${entry.total}`,
+          value: `${escapeToZero(entry.obtained) ?? "N/A"}/${entry.total}`,
           inline: true
         },
         {
