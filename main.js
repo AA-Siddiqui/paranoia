@@ -300,46 +300,76 @@ const main = async () => {
       },
       {
         "name": "Software Project Management",
-        "submitted": true,
+        "submitted": false,
         "results": [
           {
             "name": "Final",
-            "weight": 0,
-            "obtained": 0,
-            "total": 0,
-            "detailed": []
+            "weight": 40,
+            "obtained": 26,
+            "total": 40,
+            "detailed": [
+              {
+                "name": "Final",
+                "obtained": 26,
+                "total": 40
+              }
+            ]
           },
           {
             "name": "Mid Term",
-            "weight": 0,
-            "obtained": 0,
-            "total": 0,
-            "detailed": []
+            "weight": 20,
+            "obtained": 37,
+            "total": 40,
+            "detailed": [
+              {
+                "name": "Midterm",
+                "obtained": 37,
+                "total": 40
+              }
+            ]
           },
           {
             "name": "Presentation",
-            "weight": 0,
-            "obtained": 0,
-            "total": 0,
-            "detailed": []
+            "weight": 10,
+            "obtained": 9,
+            "total": 10,
+            "detailed": [
+              {
+                "name": "Presentation",
+                "obtained": 9,
+                "total": 10
+              }
+            ]
           },
           {
             "name": "Assignment",
-            "weight": 0,
-            "obtained": 0,
-            "total": 0,
-            "detailed": []
+            "weight": 15,
+            "obtained": 13,
+            "total": 15,
+            "detailed": [
+              {
+                "name": "Assignment",
+                "obtained": 13,
+                "total": 15
+              }
+            ]
           },
           {
             "name": "Quiz",
-            "weight": 0,
-            "obtained": 0,
-            "total": 0,
-            "detailed": []
+            "weight": 15,
+            "obtained": 14,
+            "total": 15,
+            "detailed": [
+              {
+                "name": "Quiz",
+                "obtained": 14,
+                "total": 15
+              }
+            ]
           }
         ],
-        "total": 0,
-        "obtained": null
+        "total": 100,
+        "obtained": 80.5
       },
       {
         "name": "Probability & Statistics",
