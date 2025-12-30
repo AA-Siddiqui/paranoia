@@ -300,7 +300,7 @@ const main = async () => {
       },
       {
         "name": "Software Project Management",
-        "submitted": false,
+        "submitted": true,
         "results": [
           {
             "name": "Final",
@@ -458,6 +458,17 @@ const main = async () => {
 
     if (diffedResults.length === 0) {
       console.log("No changes in results.");
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: "No changes as of " + new Date().toLocaleString('en-US', {
+            timeZone: 'Asia/Karachi',
+          }),
+        })
+      });
       return;
     }
     await sendResults(diffedResults);
