@@ -189,9 +189,249 @@ const main = async () => {
       return;
     }
     prevHash = hash;
-    // const filteredData = data.filter(entry => entry.obtained < 85);
-    await sendResults(data);
-    console.log(JSON.stringify(data, null, 2));
+    const knownResults = [
+      {
+        "name": "Freelancing",
+        "submitted": false,
+        "results": [
+          {
+            "name": "Class Participation",
+            "weight": 20,
+            "obtained": 10,
+            "total": 10,
+            "detailed": [
+              {
+                "name": "Class Participation - profiling",
+                "obtained": 10,
+                "total": 10
+              }
+            ]
+          }
+        ],
+        "total": 20,
+        "obtained": 20
+      },
+      {
+        "name": "Information Security",
+        "submitted": true,
+        "results": [
+          {
+            "name": "Mid Term",
+            "weight": 20,
+            "obtained": 26,
+            "total": 30,
+            "detailed": [
+              {
+                "name": "Midterm",
+                "obtained": 26,
+                "total": 30
+              }
+            ]
+          },
+          {
+            "name": "Quiz",
+            "weight": 10,
+            "obtained": 8,
+            "total": 10,
+            "detailed": [
+              {
+                "name": "Quiz",
+                "obtained": 8,
+                "total": 10
+              }
+            ]
+          },
+          {
+            "name": "Assignment",
+            "weight": 10,
+            "obtained": 8,
+            "total": 10,
+            "detailed": [
+              {
+                "name": "Assignment",
+                "obtained": 8,
+                "total": 10
+              }
+            ]
+          },
+          {
+            "name": "Project",
+            "weight": 20,
+            "obtained": 17,
+            "total": 20,
+            "detailed": [
+              {
+                "name": "Project",
+                "obtained": 17,
+                "total": 20
+              }
+            ]
+          },
+          {
+            "name": "Final",
+            "weight": 40,
+            "obtained": 38,
+            "total": 40,
+            "detailed": [
+              {
+                "name": "Final",
+                "obtained": 38,
+                "total": 40
+              }
+            ]
+          }
+        ],
+        "total": 100,
+        "obtained": 88.33333333333334
+      },
+      {
+        "name": "Final Year Project-I",
+        "submitted": false,
+        "results": [],
+        "total": 0,
+        "obtained": 0
+      },
+      {
+        "name": "Software Construction & Development",
+        "submitted": false,
+        "results": [],
+        "total": 0,
+        "obtained": 0
+      },
+      {
+        "name": "Software Project Management",
+        "submitted": true,
+        "results": [
+          {
+            "name": "Final",
+            "weight": 0,
+            "obtained": 0,
+            "total": 0,
+            "detailed": []
+          },
+          {
+            "name": "Mid Term",
+            "weight": 0,
+            "obtained": 0,
+            "total": 0,
+            "detailed": []
+          },
+          {
+            "name": "Presentation",
+            "weight": 0,
+            "obtained": 0,
+            "total": 0,
+            "detailed": []
+          },
+          {
+            "name": "Assignment",
+            "weight": 0,
+            "obtained": 0,
+            "total": 0,
+            "detailed": []
+          },
+          {
+            "name": "Quiz",
+            "weight": 0,
+            "obtained": 0,
+            "total": 0,
+            "detailed": []
+          }
+        ],
+        "total": 0,
+        "obtained": null
+      },
+      {
+        "name": "Probability & Statistics",
+        "submitted": false,
+        "results": [
+          {
+            "name": "Quiz",
+            "weight": 20,
+            "obtained": 10,
+            "total": 10,
+            "detailed": [
+              {
+                "name": "Quiz 1",
+                "obtained": 5,
+                "total": 5
+              },
+              {
+                "name": "Quiz 2",
+                "obtained": 5,
+                "total": 5
+              }
+            ]
+          },
+          {
+            "name": "Assignment",
+            "weight": 20,
+            "obtained": 10,
+            "total": 10,
+            "detailed": [
+              {
+                "name": "Assignment 1",
+                "obtained": 5,
+                "total": 5
+              },
+              {
+                "name": "Assignment 2",
+                "obtained": 5,
+                "total": 5
+              }
+            ]
+          },
+          {
+            "name": "Mid Term",
+            "weight": 20,
+            "obtained": 18,
+            "total": 20,
+            "detailed": [
+              {
+                "name": "Mid Term",
+                "obtained": 18,
+                "total": 20
+              }
+            ]
+          }
+        ],
+        "total": 60,
+        "obtained": 58
+      }
+    ];
+
+    const diffedResults = data.filter(d => {
+      const known = knownResults.find(kr => kr.name === d.name);
+
+      if (!known) {
+        return true;
+      }
+
+      if (escapeToZero(known.obtained) !== escapeToZero(d.obtained) || escapeToZero(known.total) !== escapeToZero(d.total) || escapeToZero(known.submitted) !== escapeToZero(d.submitted)) {
+        return true;
+      }
+
+      if (known.results.length !== d.results.length) {
+        return true;
+      }
+
+      for (let i = 0; i < d.results.length; i++) {
+        const knownResult = known.results[i];
+        const currentResult = d.results.find(r => r.name === knownResult.name);
+        if (!knownResult || escapeToZero(knownResult.obtained) !== escapeToZero(currentResult.obtained) || escapeToZero(knownResult.total) !== escapeToZero(currentResult.total)) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+
+    if (diffedResults.length === 0) {
+      console.log("No changes in results.");
+      return;
+    }
+    await sendResults(diffedResults);
+    console.log(JSON.stringify(diffedResults, null, 2));
 
   } catch (error) {
     console.error(error);
