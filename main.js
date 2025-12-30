@@ -458,6 +458,7 @@ const main = async () => {
 
     if (diffedResults.length === 0) {
       console.log("No changes in results.");
+      const webhookUrl = process.env.WEBHOOK;
       await fetch(webhookUrl, {
         method: "POST",
         headers: {
