@@ -294,9 +294,17 @@ const main = async () => {
       {
         "name": "Software Construction & Development",
         "submitted": false,
-        "results": [],
+        "results": [
+          {
+            "name": "Final",
+            "weight": 0,
+            "obtained": 0,
+            "total": 0,
+            "detailed": []
+          }
+        ],
         "total": 0,
-        "obtained": 0
+        "obtained": null
       },
       {
         "name": "Software Project Management",
