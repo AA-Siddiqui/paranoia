@@ -378,9 +378,19 @@ const main = async () => {
           {
             "name": "Quiz",
             "weight": 20,
-            "obtained": 10,
-            "total": 10,
+            "obtained": 16,
+            "total": 20,
             "detailed": [
+              {
+                "name": "Quiz 3",
+                "obtained": 4,
+                "total": 5
+              },
+              {
+                "name": "Quiz 4",
+                "obtained": 2,
+                "total": 5
+              },
               {
                 "name": "Quiz 1",
                 "obtained": 5,
@@ -396,8 +406,8 @@ const main = async () => {
           {
             "name": "Assignment",
             "weight": 20,
-            "obtained": 10,
-            "total": 10,
+            "obtained": 20,
+            "total": 20,
             "detailed": [
               {
                 "name": "Assignment 1",
@@ -406,6 +416,16 @@ const main = async () => {
               },
               {
                 "name": "Assignment 2",
+                "obtained": 5,
+                "total": 5
+              },
+              {
+                "name": "Assignment 3",
+                "obtained": 5,
+                "total": 5
+              },
+              {
+                "name": "Assignment 4",
                 "obtained": 5,
                 "total": 5
               }
@@ -423,11 +443,24 @@ const main = async () => {
                 "total": 20
               }
             ]
+          },
+          {
+            "name": "Final",
+            "weight": 40,
+            "obtained": 40,
+            "total": 40,
+            "detailed": [
+              {
+                "name": "Final Term",
+                "obtained": 40,
+                "total": 40
+              }
+            ]
           }
         ],
-        "total": 60,
-        "obtained": 58
-      }
+        "total": 100,
+        "obtained": 94
+      },
     ];
 
     const diffedResults = data.filter(d => {
