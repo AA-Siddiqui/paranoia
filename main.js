@@ -313,7 +313,7 @@ const main = async () => {
           {
             "name": "Final",
             "weight": 40,
-            "obtained": 26,
+            "obtained": 29,
             "total": 40,
             "detailed": [
               {
@@ -377,7 +377,7 @@ const main = async () => {
           }
         ],
         "total": 100,
-        "obtained": 80.5
+        "obtained": 83.5
       },
       {
         "name": "Probability & Statistics",
