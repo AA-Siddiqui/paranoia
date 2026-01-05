@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const { Pool } = require("pg")
 const sessionKeep = "FALL 2025";
 let prevHash = null;
 
@@ -75,7 +76,52 @@ const waitOnPage = (page, selector, length) => {
   }, selector, length);
 }
 
+const updateResults = async (results) => {
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+  const client = await pool.connect()
+  try {
+    const updateResult = await client.query(
+      `UPDATE paranoia_results SET results = $1 WHERE id = 1`,
+      [JSON.stringify(results)]
+    )
+    console.log("UPDATE RESULT:", updateResult.rowCount)
+  } finally {
+    client.release()
+    await pool.end()
+  }
+}
+
+const getResults = async () => {
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+  const client = await pool.connect()
+  try {
+    const readResult = await client.query(
+      `SELECT results FROM paranoia_results WHERE id = 1`,
+    )
+
+    console.log("READ RESULT:", readResult.rows)
+    return readResult.rows[0].results;
+
+    
+  } finally {
+    client.release()
+    await pool.end()
+  }
+}
+
+
 const main = async () => {
+  const results = getResults();
   const browser = await puppeteer.launch({
     browser: 'firefox',
     headless: true,
@@ -189,287 +235,7 @@ const main = async () => {
       return;
     }
     prevHash = hash;
-    const knownResults = [
-      {
-        "name": "Freelancing",
-        "submitted": false,
-        "results": [
-          {
-            "name": "Class Participation",
-            "weight": 20,
-            "obtained": 10,
-            "total": 10,
-            "detailed": [
-              {
-                "name": "Class Participation - profiling",
-                "obtained": 10,
-                "total": 10
-              }
-            ]
-          }
-        ],
-        "total": 20,
-        "obtained": 20
-      },
-      {
-        "name": "Information Security",
-        "submitted": true,
-        "results": [
-          {
-            "name": "Mid Term",
-            "weight": 20,
-            "obtained": 26,
-            "total": 30,
-            "detailed": [
-              {
-                "name": "Midterm",
-                "obtained": 26,
-                "total": 30
-              }
-            ]
-          },
-          {
-            "name": "Quiz",
-            "weight": 10,
-            "obtained": 8,
-            "total": 10,
-            "detailed": [
-              {
-                "name": "Quiz",
-                "obtained": 8,
-                "total": 10
-              }
-            ]
-          },
-          {
-            "name": "Assignment",
-            "weight": 10,
-            "obtained": 8,
-            "total": 10,
-            "detailed": [
-              {
-                "name": "Assignment",
-                "obtained": 8,
-                "total": 10
-              }
-            ]
-          },
-          {
-            "name": "Project",
-            "weight": 20,
-            "obtained": 17,
-            "total": 20,
-            "detailed": [
-              {
-                "name": "Project",
-                "obtained": 17,
-                "total": 20
-              }
-            ]
-          },
-          {
-            "name": "Final",
-            "weight": 40,
-            "obtained": 38,
-            "total": 40,
-            "detailed": [
-              {
-                "name": "Final",
-                "obtained": 38,
-                "total": 40
-              }
-            ]
-          }
-        ],
-        "total": 100,
-        "obtained": 88.33333333333334
-      },
-      {
-        "name": "Final Year Project-I",
-        "submitted": false,
-        "results": [],
-        "total": 0,
-        "obtained": 0
-      },
-      {
-        "name": "Software Construction & Development",
-        "submitted": false,
-        "results": [
-          {
-            "name": "Final",
-            "weight": 0,
-            "obtained": 0,
-            "total": 0,
-            "detailed": []
-          }
-        ],
-        "total": 0,
-        "obtained": null
-      },
-      {
-        "name": "Software Project Management",
-        "submitted": false,
-        "results": [
-          {
-            "name": "Final",
-            "weight": 40,
-            "obtained": 30,
-            "total": 40,
-            "detailed": [
-              {
-                "name": "Final",
-                "obtained": 30,
-                "total": 40
-              }
-            ]
-          },
-          {
-            "name": "Mid Term",
-            "weight": 20,
-            "obtained": 37,
-            "total": 40,
-            "detailed": [
-              {
-                "name": "Midterm",
-                "obtained": 37,
-                "total": 40
-              }
-            ]
-          },
-          {
-            "name": "Presentation",
-            "weight": 10,
-            "obtained": 9,
-            "total": 10,
-            "detailed": [
-              {
-                "name": "Presentation",
-                "obtained": 9,
-                "total": 10
-              }
-            ]
-          },
-          {
-            "name": "Assignment",
-            "weight": 15,
-            "obtained": 13,
-            "total": 15,
-            "detailed": [
-              {
-                "name": "Assignment",
-                "obtained": 13,
-                "total": 15
-              }
-            ]
-          },
-          {
-            "name": "Quiz",
-            "weight": 15,
-            "obtained": 14,
-            "total": 15,
-            "detailed": [
-              {
-                "name": "Quiz",
-                "obtained": 14,
-                "total": 15
-              }
-            ]
-          }
-        ],
-        "total": 100,
-        "obtained": 84.5
-      },
-      {
-        "name": "Probability & Statistics",
-        "submitted": false,
-        "results": [
-          {
-            "name": "Quiz",
-            "weight": 20,
-            "obtained": 16,
-            "total": 20,
-            "detailed": [
-              {
-                "name": "Quiz 3",
-                "obtained": 4,
-                "total": 5
-              },
-              {
-                "name": "Quiz 4",
-                "obtained": 2,
-                "total": 5
-              },
-              {
-                "name": "Quiz 1",
-                "obtained": 5,
-                "total": 5
-              },
-              {
-                "name": "Quiz 2",
-                "obtained": 5,
-                "total": 5
-              }
-            ]
-          },
-          {
-            "name": "Assignment",
-            "weight": 20,
-            "obtained": 20,
-            "total": 20,
-            "detailed": [
-              {
-                "name": "Assignment 1",
-                "obtained": 5,
-                "total": 5
-              },
-              {
-                "name": "Assignment 2",
-                "obtained": 5,
-                "total": 5
-              },
-              {
-                "name": "Assignment 3",
-                "obtained": 5,
-                "total": 5
-              },
-              {
-                "name": "Assignment 4",
-                "obtained": 5,
-                "total": 5
-              }
-            ]
-          },
-          {
-            "name": "Mid Term",
-            "weight": 20,
-            "obtained": 18,
-            "total": 20,
-            "detailed": [
-              {
-                "name": "Mid Term",
-                "obtained": 18,
-                "total": 20
-              }
-            ]
-          },
-          {
-            "name": "Final",
-            "weight": 40,
-            "obtained": 40,
-            "total": 40,
-            "detailed": [
-              {
-                "name": "Final Term",
-                "obtained": 40,
-                "total": 40
-              }
-            ]
-          }
-        ],
-        "total": 100,
-        "obtained": 94
-      },
-    ];
+    const knownResults = await results;
 
     const diffedResults = data.filter(d => {
       const known = knownResults.find(kr => kr.name === d.name);
@@ -513,6 +279,7 @@ const main = async () => {
       });
       return;
     }
+    updateResults(data);
     await sendResults(diffedResults);
     console.log(JSON.stringify(diffedResults, null, 2));
 
