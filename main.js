@@ -308,7 +308,7 @@ const main = async () => {
       },
       {
         "name": "Software Project Management",
-        "submitted": false,
+        "submitted": true,
         "results": [
           {
             "name": "Final",
