@@ -31,4 +31,5 @@ jobs:
           ROLL_NO: ${{ secrets.ROLL_NO }}
           PASSWORD: ${{ secrets.PASSWORD }}
           WEBHOOK: ${{ secrets.WEBHOOK }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: pnpm go
