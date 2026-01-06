@@ -279,9 +279,13 @@ const main = async () => {
       });
       return;
     }
-    updateResults(data);
-    await sendResults(diffedResults);
+
     console.log(JSON.stringify(diffedResults, null, 2));
+    
+    await Promise.all([
+      updateResults(data),
+      sendResults(diffedResults)
+    ]);
 
   } catch (error) {
     console.error(error);
