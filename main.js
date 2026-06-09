@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const { Pool } = require("pg")
 const sessionKeep = "SPRING 2026";
+const noChangeMessageId = "1513915286573809815";
 let prevHash = null;
 
 const escapeToZero = (num) => {
@@ -54,6 +55,24 @@ async function sendResults(data) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ embeds })
+  });
+}
+
+async function updateNoChangeMessage() {
+  const webhookUrl = process.env.WEBHOOK;
+  const editUrl = new URL(webhookUrl);
+  editUrl.pathname = `${editUrl.pathname.replace(/\/$/, "")}/messages/${noChangeMessageId}`;
+
+  await fetch(editUrl, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content: "No changes as of " + new Date().toLocaleString('en-US', {
+        timeZone: 'Asia/Karachi',
+      }),
+    })
   });
 }
 
@@ -235,6 +254,7 @@ const main = async () => {
 
     if (hash === prevHash) {
       console.log("No changes detected.");
+      await updateNoChangeMessage();
       return;
     }
     prevHash = hash;
@@ -268,18 +288,7 @@ const main = async () => {
 
     if (diffedResults.length === 0) {
       console.log("No changes in results.");
-      const webhookUrl = process.env.WEBHOOK;
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: "No changes as of " + new Date().toLocaleString('en-US', {
-            timeZone: 'Asia/Karachi',
-          }),
-        })
-      });
+      await updateNoChangeMessage();
       return;
     }
 
