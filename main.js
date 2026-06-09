@@ -146,10 +146,10 @@ const main = async () => {
 
     await Promise.all([
       // waitOnPage(page, "#hierarchical-show a", 3),
-      page.waitForNavigation({ waitUntil: 'networkidle2' }),
       page.click('button[type="submit"]'),
     ]);
-
+    await new Promise(resolve => setTimeout(resolve, 30000));
+    
     const links = await page.evaluate(async (sessionKeep) => {
       window.scrollTo(0, document.body.scrollHeight);
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -203,17 +203,18 @@ const main = async () => {
               } else {
                 results[results.length - 1].detailed.push({
                   name: e.children.item(0).innerHTML.trim(),
-                  obtained: Number(e.children.item(3).innerHTML.trim()),
-                  total: Number(e.children.item(2).innerHTML.trim()),
+                  obtained: Number(e.children.item(2).innerHTML.trim()),
+                  total: Number(e.children.item(1).innerHTML.trim()),
                 });
-                results[results.length - 1].obtained += Number(e.children.item(3).innerHTML.trim());
-                results[results.length - 1].total += Number(e.children.item(2).innerHTML.trim());
+                results[results.length - 1].obtained += Number(e.children.item(2).innerHTML.trim());
+                results[results.length - 1].total += Number(e.children.item(1).innerHTML.trim());
               }
             });
 
             return results;
           } catch (e) { console.log(e); return null }
         });
+        console.log({ name, submitted, results, total: results.reduce((acc, curr) => acc + curr.weight, 0), obtained: results.reduce((acc, curr) => acc + (curr.obtained / curr.total * curr.weight), 0) ?? 0 });
         return { name, submitted, results, total: results.reduce((acc, curr) => acc + curr.weight, 0), obtained: results.reduce((acc, curr) => acc + (curr.obtained / curr.total * curr.weight), 0) ?? 0 };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
