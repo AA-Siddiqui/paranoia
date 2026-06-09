@@ -1,0 +1,13 @@
+services:
+  paranoia:
+    build:
+      context: .
+    image: paranoia-check:latest
+    container_name: paranoia-check
+    env_file:
+      - .env
+    environment:
+      CHECK_INTERVAL_SECONDS: "300"
+      TZ: Asia/Karachi
+    restart: unless-stopped
+    shm_size: "1gb"
