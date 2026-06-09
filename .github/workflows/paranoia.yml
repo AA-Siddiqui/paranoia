@@ -1,6 +1,8 @@
 name: Paranoia Check
 
 on:
+  schedule:
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -22,7 +24,7 @@ jobs:
         run: pnpm install
 
       - name: Install browser
-        run: pnpx puppeteer browsers install firefox
+        run: pnpx puppeteer browsers install firefox@stable_146.0.1
 
       - name: Run script
         env:

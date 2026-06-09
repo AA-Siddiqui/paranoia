@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const { Pool } = require("pg")
-const sessionKeep = "FALL 2025";
+const sessionKeep = "SPRING 2026";
 let prevHash = null;
 
 const escapeToZero = (num) => {
