@@ -145,8 +145,9 @@ const main = async () => {
     await page.type(passwordSelector, process.env.PASSWORD);
 
     await Promise.all([
-      waitOnPage(page, "#hierarchical-show a", 3),
-      page.click('button[type="submit"]')
+      // waitOnPage(page, "#hierarchical-show a", 3),
+      page.waitForNavigation({ waitUntil: 'networkidle2' }),
+      page.click('button[type="submit"]'),
     ]);
 
     const links = await page.evaluate(async (sessionKeep) => {
@@ -157,7 +158,7 @@ const main = async () => {
       ).filter(
         (a) => {
           const startsWith = a.href.startsWith("https://erp.superior.edu.pk/student/results/id/");
-          const session = a.querySelector("span.uk-text-small").innerText === sessionKeep;
+          const session = a.querySelector("span.uk-text-small").innerText.trim() === sessionKeep;
           return startsWith && session;
         }
       ).map(
@@ -169,6 +170,7 @@ const main = async () => {
       );
     }, sessionKeep);
     console.log("collecting links done");
+    console.log(links);
 
     async function processLink(urlObj) {
       const url = urlObj.link;
