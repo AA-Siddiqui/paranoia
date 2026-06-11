@@ -131,7 +131,6 @@ const getResults = async () => {
     console.log("READ RESULT:", readResult.rows)
     return readResult.rows[0].results;
 
-    
   } finally {
     client.release()
     await pool.end()
@@ -145,6 +144,10 @@ const main = async () => {
     browser: 'firefox',
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    defaultViewport: {
+      width: 1316,
+      height: 728
+    },
   });
 
   const page = await browser.newPage();
@@ -167,8 +170,10 @@ const main = async () => {
       // waitOnPage(page, "#hierarchical-show a", 3),
       page.click('button[type="submit"]'),
     ]);
-    await new Promise(resolve => setTimeout(resolve, 30000));
-    
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    await page.goto("https://erp.superior.edu.pk/student/results", { waitUntil: 'networkidle2' });
+    await waitOnPage(page, "#hierarchical-show a", 0);
+
     const links = await page.evaluate(async (sessionKeep) => {
       window.scrollTo(0, document.body.scrollHeight);
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -177,14 +182,14 @@ const main = async () => {
       ).filter(
         (a) => {
           const startsWith = a.href.startsWith("https://erp.superior.edu.pk/student/results/id/");
-          const session = a.querySelector("span.uk-text-small").innerText.trim() === sessionKeep;
+          const session = document.querySelector("div.md-card.md-card-hover > div.uk-badge.md-bg-blue-50.md-color-grey-900.uk-position-absolute.uk-position-bottom-right").innerText.toLowerCase().trim() === sessionKeep.toLowerCase();
           return startsWith && session;
         }
       ).map(
         (a) => ({
           link: a.href,
-          name: Array.from(a.children).filter((e) => e instanceof HTMLSpanElement)[0].innerText,
-          submitted: Array.from(a.querySelectorAll("span.md-color-blue-grey-600")).filter((e) => e.className === "md-color-blue-grey-600")[0].innerText !== "Active Class"
+          name: a.querySelector("span.md-list-heading").innerText,
+          submitted: a.parentElement.lastElementChild.querySelector("span.uk-badge").innerText.toLowerCase().trim() !== "class in progress"
         })
       );
     }, sessionKeep);
@@ -293,7 +298,7 @@ const main = async () => {
     }
 
     console.log(JSON.stringify(diffedResults, null, 2));
-    
+
     await Promise.all([
       updateResults(data),
       sendResults(diffedResults)
