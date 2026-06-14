@@ -51,11 +51,14 @@ const main = async (rollNo) => {
       page.click('button[type="submit"]'),
     ]);
     await new Promise(resolve => setTimeout(resolve, 5000));
+    
+    await page.goto("https://erp.superior.edu.pk/student/results", { waitUntil: 'networkidle2' });
+    
     if (page.url() === "https://erp.superior.edu.pk/web/login") {
       console.log(`Login failed for ${rollNo}`);
       return;
     }
-    await page.goto("https://erp.superior.edu.pk/student/results", { waitUntil: 'networkidle2' });
+
     await waitOnPage(page, "#hierarchical-show a", 0);
 
     const links = await page.evaluate(async (sessionKeep) => {
