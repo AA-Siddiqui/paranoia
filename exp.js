@@ -22,7 +22,7 @@ const waitOnPage = (page, selector, length) => {
 const main = async (rollNo) => {
   const browser = await puppeteer.launch({
     browser: 'firefox',
-    headless: true,
+    headless: false,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
     defaultViewport: {
       width: 1316,
@@ -143,6 +143,10 @@ const main = async (rollNo) => {
   }
 };
 
-for (let i = 1; i <= 500; i++) { 
-  main("SU92-BSSEM-F22-" + String(i).padStart(3, '0'));
+const runner = async () => {
+  for (let i = 1; i <= 350; i++) { 
+    await main("SU92-BSSEM-F22-" + String(i).padStart(3, '0'));
+  }
 }
+
+runner();
